@@ -1,0 +1,20 @@
+language: bash
+
+notifications:
+  email: false
+
+services:
+  - docker
+
+script:
+  - docker build -t tangocs/tango-lib-dependencies .
+
+before_deploy:
+  - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+  - docker tag tangocs/tango-lib-dependencies tangocs/tango-lib-dependencies:latest
+
+deploy:
+  - provider: script
+    script: docker push tangocs/tango-lib-dependencies:latest
+    on:
+      branch: master
